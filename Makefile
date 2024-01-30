@@ -1,6 +1,8 @@
-.PHONY: install start stop openapi openapi_v3
-.PHONY: ping diag partition partitions node nodes job jobs licenses 
-.PHONY: post_job job_submit 
+.PHONY: install start stop 
+.PHONY: openapi openapi_v3 openapi_json openapi_yaml
+.PHONY: ping diag partition partitions node nodes job jobs licenses
+.PHONY: post_job post_node submit_job
+.PHONY: delete_job delete_node
 .PHONY: accounts
 
 # ================================================== REQUIRED START ==================================================
@@ -23,6 +25,7 @@ job_id = ''
 
 req_post_job = ./request/post_job.json
 req_job_submit = ./request/job_submit.json
+req_post_node = ./request/post_node.json
 # ================================================== OPTINOAL END ==================================================
 
 # ================================================== SERVICE START ==================================================
@@ -40,11 +43,24 @@ start:
 # 关闭
 stop:
 	# 未定义
+# ================================================== SERVICE END ==================================================
+
+# ================================================== SERVICE START ==================================================
+# 查看openapi
+openapi:
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi
 
 # 查看openapi_v3
-openapi:
-	# 查看openapi
-	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi
+openapi_v3:
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi_v3
+
+# 查看openapi.json
+openapi_json:
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi.json
+
+# 查看openapi.yaml
+openapi_yaml:
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi.yaml
 # ================================================== SERVICE END ==================================================
 
 # ================================================== SLURM GET START ==================================================
@@ -94,7 +110,7 @@ post_job:
 	-d @${req_post_job} \
 	${host_ip_port}/slurm/${openapi_version}/job/${job_id}
 
-job_submit:
+submit_job:
 	curl -X POST \
 	-H 'Content-Type: application/json' \
 	-H 'X-SLURM-USER-NAME: ${user_name}' \
@@ -112,6 +128,19 @@ post_node:
 # ================================================== SLURM POST END ==================================================
 
 # ================================================== SLURM DELETE START ==================================================
+# 删除作业
+delete_job:
+	curl -X DELETE \
+	-H 'X-SLURM-USER-NAME: ${user_name}' \
+	-H 'X-SLURM-USER-TOKEN: ${user_token}' \
+	${host_ip_port}/slurm/${openapi_version}/job/${job_id}
+
+# 删除作业
+delete_node:
+	curl -X DELETE \
+	-H 'X-SLURM-USER-NAME: ${user_name}' \
+	-H 'X-SLURM-USER-TOKEN: ${user_token}' \
+	${host_ip_port}/slurm/${openapi_version}/node/${node_name}
 # ================================================== SLURM DELETE END ==================================================
 
 
