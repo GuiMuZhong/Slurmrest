@@ -1,4 +1,4 @@
-.PHONY: install start stop openapi_v3
+.PHONY: install start stop openapi openapi_v3
 .PHONY: ping diag partition partitions node nodes job jobs licenses 
 .PHONY: post_job job_submit 
 .PHONY: accounts
@@ -12,7 +12,7 @@ openapi_version = v0.0.38
 
 # 未开启JWT时随便填就好
 user_name = root
-user_token = 111111
+user_token = nudt@651
 # ================================================== REQUIRED END ==================================================
 
 # ================================================== OPTINOAL START ==================================================
@@ -42,9 +42,9 @@ stop:
 	# 未定义
 
 # 查看openapi_v3
-openapi_v3:
+openapi:
 	# 查看openapi
-	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi/v3
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi
 # ================================================== SERVICE END ==================================================
 
 # ================================================== SLURM GET START ==================================================

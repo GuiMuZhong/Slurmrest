@@ -1,2 +1,2 @@
-# Slurmrest
-slurm rest api study
+# Slurm REST API
+
