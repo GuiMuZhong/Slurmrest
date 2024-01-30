@@ -28,4 +28,4 @@
 
    一些常用的接口介绍，使用案例
 
-本项目中还有一个Makefile文件，里面包含了作者使用时的一些命令，有大量注释，对Makefile语法熟悉的同学，可以直接看它学习和使用。
+本项目中还有一个Makefile文件，里面包含了作者使用时的一些命令，有大量注释，对Makefile语法熟悉的同学，可以直接看它学习和使用，不会的建议学习[**Makefile介绍**](https://seisman.github.io/how-to-write-makefile/introduction.html) 。
