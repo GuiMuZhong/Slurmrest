@@ -1,4 +1,7 @@
-.PHONY: install start stop openapi_v3 ping diag partition partitions node nodes job jobs licenses post_job job_submit accounts
+.PHONY: install start stop openapi_v3
+.PHONY: ping diag partition partitions node nodes job jobs licenses 
+.PHONY: post_job job_submit 
+.PHONY: accounts
 
 # ================================================== REQUIRED START ==================================================
 # 启动服务的IP和端口
@@ -18,8 +21,8 @@ partition_name = ''
 node_name = ''
 job_id = ''
 
-req_post_job = ./request/slurm/post_job.json
-req_job_submit = ./request/slurm/job_submit.json
+req_post_job = ./request/post_job.json
+req_job_submit = ./request/job_submit.json
 # ================================================== OPTINOAL END ==================================================
 
 # ================================================== SERVICE START ==================================================
