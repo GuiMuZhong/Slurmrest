@@ -1,3 +1,16 @@
 {
-    
+    "script": "#!/bin/bash\nsrun uptime",
+    "job": {
+        "environment": [
+            "PATH=/bin/:/usr/bin/:/sbin/"
+        ],
+        "account": "test",
+        "name": "test slurmrestd job",
+        "memory_per_node": {
+            "set": true,
+            "number": 100
+        },
+        "tasks": 5,
+        "nodes": "2-10"
+    }
 }

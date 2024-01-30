@@ -12,13 +12,22 @@ host_ip_port = 25.8.100.94:6688
 # slurmrest的openapi版本，如未知，可任意执行一个GET会有提示
 openapi_version = v0.0.38
 
-# 未开启JWT时随便填就好
+# 用户名，没什么用仅记录一下
 user_name = root
-user_token = nudt@651
+
+# JWT 验证用户需要的token，未启用jwt时随便填就好
+# 启用jwt，要先在slurm.conf中配置，可见下文中的set_jwt
+# user_token_conf是存储token的文件，这只是本文的写法，直接设置user_token=value也一样
+user_token_conf =  ./conf/user_token
+user_token = $(shell cat ${user_token_conf})
+
+# token过期时间 second
+token_lifespan = 1800
 # ================================================== REQUIRED END ==================================================
 
 # ================================================== OPTINOAL START ==================================================
-# 参数，某些命令需要
+# 参数，某些命令需要，可以在执行的时候输入具体值
+# .eg: make target job_id=1
 partition_name = ''
 node_name = ''
 job_id = ''
@@ -43,16 +52,31 @@ start:
 # 关闭
 stop:
 	# 未定义
+
+# 设置使用JWT验证，slurm.conf中添加以下配置
+# AuthAltTypes=auth/jwt
+# AuthAltParameters=jwt_key=/var/spool/slurm/statesave/jwt_hs256.key
+set_jwt:
+	# 未定义
+
+# 设置非root用户不能生成token，slurm.conf中添加以下配置
+# AuthAltParameters=disable_token_creation
+disable_token_creation:
+	# 未定义
+
+# 获取token
+get_token:
+	scontrol token username=${user_name} lifespan=${token_lifespan} > ${user_token_conf}
 # ================================================== SERVICE END ==================================================
 
 # ================================================== SERVICE START ==================================================
 # 查看openapi
 openapi:
-	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi > ./openapi/openapi.json
 
 # 查看openapi_v3
 openapi_v3:
-	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi_v3
+	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi_v3 > ./openapi/openapi_v3.json
 
 # 查看openapi.json
 openapi_json:
@@ -153,4 +177,6 @@ accounts:
 
 
 # ================================================== TEST START ==================================================
+test_read:
+	echo ${user_token}
 # ================================================== TEST END ==================================================
