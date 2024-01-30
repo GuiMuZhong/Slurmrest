@@ -38,8 +38,52 @@ req_post_node = ./request/post_node.json
 # ================================================== OPTINOAL END ==================================================
 
 # ================================================== SERVICE START ==================================================
+software_path=./software/
+
+# 安装 JSON-C
+install_json:
+	# git clone --depth 1 --single-branch -b json-c-0.15-20200726 https://github.com/json-c/json-c.git ${software_path}json-c
+	mkdir ${software_path}json-c-build
+	cd ${software_path}json-c-build
+	cmake ../json-c
+	make
+	sudo make install
+	cd ../..
+	# export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
+
+# 安装 HTTP Parse
+install_http:
+	# git clone --depth 1 --single-branch -b v2.9.4 https://github.com/nodejs/http-parser.git ${software_path}http_parser
+	cd ${software_path}http_parser
+	make
+	sudo make install
+	cd ../..
+	# --with-http-parser=/usr/local/
+
+# 安装 YAML Parser
+install_yaml:
+	# git clone --depth 1 --single-branch -b 0.2.5 https://github.com/yaml/libyaml ${software_path}libyaml
+	cd ${software_path}libyaml
+	./bootstrap
+	./configure
+	make
+	sudo make install
+	cd ../..
+	# --with-yaml=/usr/local/
+
+# 安装 JWT Authentication
+install_jwt:
+	# git clone --depth 1 --single-branch -b v1.12.0 https://github.com/benmcollins/libjwt.git ${software_path}libjwt
+	cd ${software_path}libjwt
+	autoreconf --force --install
+	./configure --prefix=/usr/local
+	make -j
+	sudo make install
+	cd ../..
+	# --with-jwt=/usr/local/
+
 # 安装
-install:
+install: install_json install_http install_yaml install_jwt
 	# 未定义
 
 # 启动
@@ -177,6 +221,12 @@ accounts:
 
 
 # ================================================== TEST START ==================================================
+git_push:
+	git add .
+	git commit -m 'commit'
+	git push
+
 test_read:
 	echo ${user_token}
+	export http_proxy=http://127.0.0.1:10792;export https_proxy=http://127.0.0.1:10792;
 # ================================================== TEST END ==================================================
