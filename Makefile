@@ -5,6 +5,7 @@
 .PHONY: delete_job delete_node
 .PHONY: accounts
 
+# 必填表单
 # ================================================== REQUIRED START ==================================================
 # 启动服务的IP和端口
 host_ip_port = 25.8.100.94:6688
@@ -25,6 +26,7 @@ user_token = $(shell cat ${user_token_conf})
 token_lifespan = 1800
 # ================================================== REQUIRED END ==================================================
 
+# 非必填表单
 # ================================================== OPTINOAL START ==================================================
 # 参数，某些命令需要，可以在执行的时候输入具体值
 # .eg: make target job_id=1
@@ -37,10 +39,13 @@ req_job_submit = ./request/job_submit.json
 req_post_node = ./request/post_node.json
 # ================================================== OPTINOAL END ==================================================
 
+# 服务相关，安装启动等
 # ================================================== SERVICE START ==================================================
 software_path=./software/
 
-
+# 解压已经下载好的软件
+unzip_software:
+	unzip software.zip
 
 # 安装 JSON-C
 install_json:
@@ -85,7 +90,7 @@ install_jwt:
 	# --with-jwt=/usr/local/
 
 # 安装
-install: install_json install_http install_yaml install_jwt
+install: unzip_software install_json install_http install_yaml install_jwt
 	# 未定义
 
 # 启动
@@ -115,7 +120,8 @@ get_token:
 	scontrol token username=${user_name} lifespan=${token_lifespan} > ${user_token_conf}
 # ================================================== SERVICE END ==================================================
 
-# ================================================== SERVICE START ==================================================
+# 获取API的相关命令
+# ================================================== OPENAPI START ==================================================
 # 查看openapi
 openapi:
 	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi > ./openapi/openapi.json
@@ -131,7 +137,7 @@ openapi_json:
 # 查看openapi.yaml
 openapi_yaml:
 	curl -H 'X-SLURM-USER-NAME: ${user_name}' -H 'X-SLURM-USER-TOKEN: ${user_token}' ${host_ip_port}/openapi.yaml
-# ================================================== SERVICE END ==================================================
+# ================================================== OPENAPI END ==================================================
 
 # ================================================== SLURM GET START ==================================================
 # 测试
@@ -221,7 +227,6 @@ accounts:
 # ================================================== SLURMDB GET END ==================================================
 
 
-
 # ================================================== TEST START ==================================================
 git_push:
 	git add .
@@ -230,5 +235,4 @@ git_push:
 
 test_read:
 	echo ${user_token}
-	export http_proxy=http://127.0.0.1:10792;export https_proxy=http://127.0.0.1:10792;
 # ================================================== TEST END ==================================================
