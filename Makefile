@@ -40,6 +40,8 @@ req_post_node = ./request/post_node.json
 # ================================================== SERVICE START ==================================================
 software_path=./software/
 
+
+
 # 安装 JSON-C
 install_json:
 	# git clone --depth 1 --single-branch -b json-c-0.15-20200726 https://github.com/json-c/json-c.git ${software_path}json-c
