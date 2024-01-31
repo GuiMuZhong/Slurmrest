@@ -211,7 +211,7 @@ delete_job:
 	-H 'X-SLURM-USER-TOKEN: ${user_token}' \
 	${host_ip_port}/slurm/${openapi_version}/job/${job_id}
 
-# 删除作业
+# 删除节点
 delete_node:
 	curl -X DELETE \
 	-H 'X-SLURM-USER-NAME: ${user_name}' \
